@@ -30,7 +30,7 @@ clean:
 	rm -vrI $(PREF_BIN)* $(PREF_OBJ)* 
 
 clog: 
-	rm -v /src/logs/*.txt
+	rm -v src/logs/*.txt
 
 all: 
 	@echo $(SRC_CLIENT)
