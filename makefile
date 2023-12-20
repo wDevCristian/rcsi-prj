@@ -1,5 +1,5 @@
 CC = gcc
-ARGS = 
+ARGS = -g
 
 PREF_SRC = ./src/
 PREF_OBJ = ./obj/
@@ -9,7 +9,7 @@ SRC_CLIENT = $(wildcard $(PREF_SRC)src-client/*.c)
 OBJ_CLIENT = $(patsubst $(PREF_SRC)src-client/%.c, $(PREF_OBJ)%.o, $(SRC_CLIENT))
 
 SRC_SERVER = $(wildcard $(PREF_SRC)src-server/*.c)
-OBJ_SERVER = $(patsubst $(PREF_SRC)src-server/%.c, $(PREF_OBJ)/%.o, $(SRC_SERVER))
+OBJ_SERVER = $(patsubst $(PREF_SRC)src-server/%.c, $(PREF_OBJ)%.o, $(SRC_SERVER))
 
 client: $(OBJ_CLIENT) $(PREF_OBJ)logger.o
 	$(CC) $(ARGS) $^ -o $(PREF_BIN)$@ 
@@ -17,7 +17,7 @@ client: $(OBJ_CLIENT) $(PREF_OBJ)logger.o
 $(PREF_OBJ)%.o: $(PREF_SRC)src-client/%.c
 	$(CC) $(ARGS) -c $^ -o $@
 
-server: $(OBJ_SERVER) $(PREF_OBJ)/logger.o
+server: $(OBJ_SERVER) $(PREF_OBJ)logger.o
 	$(CC) $(ARGS) $^ -o $(PREF_BIN)$@ 
 
 $(OBJ_SERVER): $(SRC_SERVER)

@@ -22,7 +22,7 @@
 #define __log_console // print logs in console
 #define __log_file    // print logs in file found of path 'logs/(__lf)'
 
-static char __msg[256];
+static char __msg[1024];
 #if (defined(__log_console) && (defined(__log_file) && defined(__lf))) // print in cli and file
 #define INFO_f "INFO"
 #define ERROR_f "ERROR"
@@ -33,7 +33,7 @@ static char __msg[256];
 #define WARNING_c "\033[1;38;5;202mWARNING\033[0m"
 #define DEBUG_c "\033[1;49;32mDEBUG\033[0m"
 #define ILOG(fmt, ...)                                                                                                   \
-   fprintf(stderr, "[" INFO_c "]    [%s] %s:%d - " fmt "\n", get_current_datetime(), __FILE__, __LINE__, ##__VA_ARGS__); \
+   fprintf(stdout, "[" INFO_c "]    [%s] %s:%d - " fmt "\n", get_current_datetime(), __FILE__, __LINE__, ##__VA_ARGS__); \
    sprintf(__msg, "[" INFO_f "]    [%s] %s:%d - " fmt "\n", get_current_datetime(), __FILE__, __LINE__, ##__VA_ARGS__);  \
    write(get_file_descriptor(), __msg, strlen(__msg))
 
@@ -48,7 +48,7 @@ static char __msg[256];
    write(get_file_descriptor(), __msg, strlen(__msg))
 
 #define DLOG(fmt, ...)                                                                                                   \
-   fprintf(stderr, "[" DEBUG_c "]   [%s] %s:%d - " fmt "\n", get_current_datetime(), __FILE__, __LINE__, ##__VA_ARGS__); \
+   fprintf(stdout, "[" DEBUG_c "]   [%s] %s:%d - " fmt "\n", get_current_datetime(), __FILE__, __LINE__, ##__VA_ARGS__); \
    sprintf(__msg, "[" DEBUG_f "]   [%s] %s:%d - " fmt "\n", get_current_datetime(), __FILE__, __LINE__, ##__VA_ARGS__);  \
    write(get_file_descriptor(), __msg, strlen(__msg))
 #elif (defined(__log_console)) // print in cli only
@@ -56,10 +56,10 @@ static char __msg[256];
 #define ERROR_c "\033[1;49;91mERROR\033[0m"
 #define WARNING_c "\033[1;38;5;202mWARNING\033[0m"
 #define DEBUG_c "\033[1;49;32mDEBUG\033[0m"
-#define ILOG(fmt, ...) fprintf(stderr, "[" INFO_c "]    [%s] %s:%d - " fmt "\n", get_current_datetime(), __FILE__, __LINE__, ##__VA_ARGS__)
+#define ILOG(fmt, ...) fprintf(stdout, "[" INFO_c "]    [%s] %s:%d - " fmt "\n", get_current_datetime(), __FILE__, __LINE__, ##__VA_ARGS__)
 #define ELOG(fmt, ...) fprintf(stderr, "[" ERROR_c "]   [%s] %s:%d - " fmt "\n", get_current_datetime(), __FILE__, __LINE__, ##__VA_ARGS__)
 #define WLOG(fmt, ...) fprintf(stderr, "[" WARNING_c "] [%s] %s:%d - " fmt "\n", get_current_datetime(), __FILE__, __LINE__, ##__VA_ARGS__)
-#define DLOG(fmt, ...) fprintf(stderr, "[" DEBUG_c "]   [%s] %s:%d - " fmt "\n", get_current_datetime(), __FILE__, __LINE__, ##__VA_ARGS__)
+#define DLOG(fmt, ...) fprintf(stdout, "[" DEBUG_c "]   [%s] %s:%d - " fmt "\n", get_current_datetime(), __FILE__, __LINE__, ##__VA_ARGS__)
 #elif (defined(__log_file) && defined(__lf)) // print in file only
 #define INFO_f "INFO"
 #define ERROR_f "ERROR"

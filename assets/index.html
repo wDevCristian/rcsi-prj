@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <title>Canvas</title>
+</head>
+
+<body style="padding: 0; margin: 0; box-sizing: border-box; ">
+   <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;" class="info-block">
+      <h1>It is a canvas you could draw on it</h1>
+      <p>You have 3 hotkeys: "C" - for clean; "S" - for save; "R" - for replay that you've draw;</p>
+   </div>
+   <canvas style="position: absolute; top: 0; left: 0; right: 0; left: 0;" id="canvas" style="display: block;">Error
+      404</canvas>
+
+   <script>
+      // Setting canvas
+      let canvas = document.getElementById('canvas');
+      let ctx = canvas.getContext('2d');
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      // Start to code and draw
+
+      let isMouseDown = false;
+      let cords = [];
+
+      ctx.lineWidth = 4;
+
+      canvas.addEventListener("mousedown", () => {
+         isMouseDown = true;
+      })
+
+      canvas.addEventListener("mouseup", () => {
+         isMouseDown = false;
+         ctx.beginPath();
+         cords.push("mouseup");
+      })
+
+      canvas.addEventListener('mousemove', (e) => {
+         if (isMouseDown) {
+
+            cords.push([e.clientX, e.clientY]);
+
+            ctx.lineTo(e.clientX, e.clientY);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(e.clientX, e.clientY, 2, 0, 2 * Math.PI);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(e.clientX, e.clientY);
+         }
+      });
+
+
+      function save() {
+         localStorage.setItem("data", JSON.stringify(cords));
+      }
+
+      function replay() {
+         cords = JSON.parse(localStorage.getItem("data"));
+
+         let timer = setInterval(function () {
+            if (!cords.length) {
+               clearInterval(timer);
+               ctx.beginPath();
+               return;
+            }
+            let crd = cords.shift();
+            let e = {
+               clientX: crd[0],
+               clientY: crd[1]
+            };
+
+            ctx.lineTo(e.clientX, e.clientY);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(e.clientX, e.clientY, 2, 0, 2 * Math.PI);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(e.clientX, e.clientY);
+         }, 10)
+      }
+
+      function clear() {
+         ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+
+      window.addEventListener("keydown", (e) => {
+         if (e.code === "KeyS") {
+            save();
+            console.log("saved");
+         }
+         if (e.code === "KeyR") {
+            clear();
+            console.log("Replaying");
+            replay();
+         }
+         if (e.code === "KeyC") {
+            clear();
+         }
+      })
+
+   </script>
+</body>
+
+</html>
